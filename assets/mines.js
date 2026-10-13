@@ -17,15 +17,15 @@ function renderStats(){var mult=currentMultiplier();multiplierEl.textContent=mul
 function shuffledIndexes(){var order=[];var i;for(i=0;i<TILE_COUNT;i+=1){order.push(i);}
 for(i=order.length-1;i>0;i-=1){var j=Math.floor(Math.random()*(i+1));var tmp=order[i];order[i]=order[j];order[j]=tmp;}
 return order;}
-function buildGrid(){gridEl.innerHTML="";state.tiles=[];for(var i=0;i<TILE_COUNT;i+=1){var tile=document.createElement("button");tile.type="button";tile.className="tile-ed53dce2";tile.disabled=true;tile.setAttribute("aria-label","Tile "+(i+1));tile.innerHTML='<span class="tile-inner-ed53dce2">'+'<span class="tile-face-ed53dce2 tile-front-ed53dce2"></span>'+'<span class="tile-face-ed53dce2 tile-back-ed53dce2"></span>'+"</span>";tile.addEventListener("click",makeTileHandler(i));gridEl.appendChild(tile);state.tiles.push(tile);}}
+function buildGrid(){gridEl.innerHTML="";state.tiles=[];for(var i=0;i<TILE_COUNT;i+=1){var tile=document.createElement("button");tile.type="button";tile.className="tile-107c21e8";tile.disabled=true;tile.setAttribute("aria-label","Tile "+(i+1));tile.innerHTML='<span class="tile-inner-107c21e8">'+'<span class="tile-face-107c21e8 tile-front-107c21e8"></span>'+'<span class="tile-face-107c21e8 tile-back-107c21e8"></span>'+"</span>";tile.addEventListener("click",makeTileHandler(i));gridEl.appendChild(tile);state.tiles.push(tile);}}
 function makeTileHandler(index){return function(){onTilePick(index);};}
-function revealTile(index,isMine,dim){var tile=state.tiles[index];if(!tile||tile.classList.contains("revealed-ed53dce2")){return;}
-var back=tile.querySelector(".tile-back-ed53dce2");if(back){back.innerHTML=isMine?BOMB_SVG:GEM_SVG;}
-tile.classList.add("revealed-ed53dce2");if(isMine){tile.classList.add("boom-ed53dce2");}
-if(dim){tile.classList.add("dimmed-ed53dce2");}
+function revealTile(index,isMine,dim){var tile=state.tiles[index];if(!tile||tile.classList.contains("revealed-107c21e8")){return;}
+var back=tile.querySelector(".tile-back-107c21e8");if(back){back.innerHTML=isMine?BOMB_SVG:GEM_SVG;}
+tile.classList.add("revealed-107c21e8");if(isMine){tile.classList.add("boom-107c21e8");}
+if(dim){tile.classList.add("dimmed-107c21e8");}
 tile.disabled=true;}
-function revealRemaining(dimAll){for(var i=0;i<TILE_COUNT;i+=1){if(!state.tiles[i].classList.contains("revealed-ed53dce2")){revealTile(i,state.mineMap[i]===true,dimAll);}}}
-function setTilesEnabled(enabled){for(var i=0;i<TILE_COUNT;i+=1){var tile=state.tiles[i];tile.disabled=!enabled||tile.classList.contains("revealed-ed53dce2");}}
+function revealRemaining(dimAll){for(var i=0;i<TILE_COUNT;i+=1){if(!state.tiles[i].classList.contains("revealed-107c21e8")){revealTile(i,state.mineMap[i]===true,dimAll);}}}
+function setTilesEnabled(enabled){for(var i=0;i<TILE_COUNT;i+=1){var tile=state.tiles[i];tile.disabled=!enabled||tile.classList.contains("revealed-107c21e8");}}
 function setControlsLocked(locked){betInput.disabled=locked;betMinus.disabled=locked;betPlus.disabled=locked;minesSelect.disabled=locked;startBtn.disabled=locked;walletResetEl.disabled=locked;}
 function readBet(){var value=Math.floor(Number(betInput.value));if(!isFinite(value)){return 0;}
 return value;}
@@ -44,11 +44,11 @@ for(var m=0;m<state.mines;m+=1){state.mineMap[order[m]]=true;}
 state.active=true;setControlsLocked(true);setTilesEnabled(true);cashBtn.disabled=true;renderStats();setStatus("Pick a tile. Cash out any time after the first gem.","");}
 function endRound(){state.active=false;setTilesEnabled(false);cashBtn.disabled=true;setControlsLocked(false);renderStats();if(state.balance<1){setStatus("Balance is empty — press reset to refill the demo wallet.","lose");}}
 function onTilePick(index){if(!state.active){return;}
-var tile=state.tiles[index];if(!tile||tile.classList.contains("revealed-ed53dce2")){return;}
+var tile=state.tiles[index];if(!tile||tile.classList.contains("revealed-107c21e8")){return;}
 if(state.mineMap[index]){revealTile(index,true,false);bust();return;}
 state.picks+=1;revealTile(index,false,false);cashBtn.disabled=false;renderStats();var safeTiles=TILE_COUNT-state.mines;if(state.picks>=safeTiles){cashOut(true);return;}
 setStatus(state.picks+" gem"+(state.picks===1?"":"s")+" found. Next pick or cash out?","");}
-function bust(){var lost=state.bet;revealRemaining(true);setStatus("Boom! The mine took your "+formatMoney(lost)+" bet.","lose");if(panelEl){panelEl.classList.remove("jolt-ed53dce2");void panelEl.offsetWidth;panelEl.classList.add("jolt-ed53dce2");}
+function bust(){var lost=state.bet;revealRemaining(true);setStatus("Boom! The mine took your "+formatMoney(lost)+" bet.","lose");if(panelEl){panelEl.classList.remove("jolt-107c21e8");void panelEl.offsetWidth;panelEl.classList.add("jolt-107c21e8");}
 endRound();}
 function cashOut(cleared){if(!state.active||state.picks<1){return;}
 var winnings=round2(state.bet*currentMultiplier());state.balance=round2(state.balance+winnings);saveBalance();renderBalance();revealRemaining(true);if(cleared){setStatus("Perfect clear! You collected "+formatMoney(winnings)+".","win");}else{setStatus("Cashed out "+formatMoney(winnings)+" at "+
@@ -56,5 +56,5 @@ currentMultiplier().toFixed(2)+"×.","win");}
 endRound();}
 function resetWallet(){if(state.active){return;}
 state.balance=START_BALANCE;saveBalance();renderBalance();renderStats();setStatus("Demo wallet refilled to "+START_BALANCE+".","");}
-startBtn.addEventListener("click",startRound);cashBtn.addEventListener("click",function(){cashOut(false);});walletResetEl.addEventListener("click",resetWallet);betMinus.addEventListener("click",function(){nudgeBet(-BET_STEP);});betPlus.addEventListener("click",function(){nudgeBet(BET_STEP);});betInput.addEventListener("change",clampBetInput);if(panelEl){panelEl.addEventListener("animationend",function(){panelEl.classList.remove("jolt-ed53dce2");});}
+startBtn.addEventListener("click",startRound);cashBtn.addEventListener("click",function(){cashOut(false);});walletResetEl.addEventListener("click",resetWallet);betMinus.addEventListener("click",function(){nudgeBet(-BET_STEP);});betPlus.addEventListener("click",function(){nudgeBet(BET_STEP);});betInput.addEventListener("change",clampBetInput);if(panelEl){panelEl.addEventListener("animationend",function(){panelEl.classList.remove("jolt-107c21e8");});}
 buildGrid();renderBalance();renderStats();if(state.balance<1){setStatus("Balance is empty — press reset to refill the demo wallet.","");}})();
